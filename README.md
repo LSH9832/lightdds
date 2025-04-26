@@ -2,7 +2,7 @@
 
 ## 1. 介绍
 
-LightDDS 是一个基于DDS的轻量级消息中间件，支持发布订阅等功能，本开发工具能以帮助你快速创建DDS工作空间，DDS工程，DDS消息等，方便你快速开发DDS应用。
+LightDDS 是一个基于DDS（Data Distribution Service）的轻量级消息中间件，支持发布订阅等功能，本开发工具能以帮助你快速创建DDS工作空间，DDS工程，DDS消息等，方便你快速开发DDS应用。
 
 ## 2. 安装
 
