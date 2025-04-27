@@ -11,12 +11,12 @@ fi
 if [ "$mode" == "install" ]; then
     pip install argcomplete pyyaml
     activate-global-python-argcomplete
-    cp $HOME/.bashrc $HOME/.bashrc.bak
-    sed -i '/# >>> lightdds initialize >>>/,/# <<< lightdds initialize <<</d' "$HOME/.bashrc"
-    echo "# >>> lightdds initialize >>>" >> ~/.bashrc
-    echo "source $script_dir/setup.bash" >> ~/.bashrc
-    echo "# <<< lightdds initialize <<<" >> ~/.bashrc
 fi
+# cp $HOME/.bashrc $HOME/.bashrc.bak
+sed -i '/# >>> lightdds initialize >>>/,/# <<< lightdds initialize <<</d' "$HOME/.bashrc"
+echo "# >>> lightdds initialize >>>" >> ~/.bashrc
+echo "source $script_dir/setup.bash" >> ~/.bashrc
+echo "# <<< lightdds initialize <<<" >> ~/.bashrc
 chmod +x -R scripts/*
 echo "export PATH=\$PATH:$script_dir/bin:$script_dir/scripts" > ./setup.bash
 echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:$script_dir/lib" >> ./setup.bash
