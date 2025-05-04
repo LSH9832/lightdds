@@ -15,7 +15,7 @@ LightDDS 是一个基于DDS（Data Distribution Service）的轻量级消息中�
 source ~/.bashrc
 
 # 动态库文件已经编译好了，如果想要重新源码编译，则执行以下命令
-./install make
+./install.sh make
 ```
 
 即安装完毕
