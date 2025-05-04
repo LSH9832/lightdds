@@ -1,6 +1,6 @@
 # LightDDS Linux开发工具使用说明
 
-## LightDDS核心源码暂不公开，敬请谅解
+**目前仅供内部使用，源码暂不公开**
 
 ## 1. 介绍
 
@@ -13,6 +13,9 @@ LightDDS 是一个基于DDS（Data Distribution Service）的轻量级消息中�
 ```shell
 ./install.sh
 source ~/.bashrc
+
+# 动态库文件已经编译好了，如果想要重新源码编译，则执行以下命令
+./install make
 ```
 
 即安装完毕
@@ -188,6 +191,8 @@ dds workspace make
 
 ## 3.4. 运行程序
 
+当然，你可以直接到工作空间目录中`install/bin`文件夹下找到可执行文件并运行，也可以通过本节内容中介绍的方式运行以方便管理
+
 ### 3.4.1. 自动生成launch文件
 
 **注意：** 本小节仅适用于以下情况
@@ -274,7 +279,72 @@ source devel/setup.bash
 dds launch dds_workspace_test1.yaml
 ```
 
-## 3.5. 导出程序
+## 3.5. 消息调试
+
+本开发工具提供了类似于ROS1的简易版的消息调试工具。
+
+### 3.5.1. 消息调试工具配置
+
+```shell
+# 注册当前工作空间下所有的自定义类型消息，`--ros-include-path`后加上对应的ROS消息头文件路径，你需要保证ROS消息头文件消息格式与DDS消息格式相同
+dds message register --ros-include-path <your/custom/ros_msg/include/path>
+
+# 如果不需要DDS/ROS消息互相转发的功能，则执行以下命令
+dds message register --no-ros-utils
+
+# 如果不需要这些注册的自定义消息了
+dds message unregister --ros-include-path <your/custom/ros_msg/include/path>
+
+# 注销所有自定义消息，请首次使用时先执行此命令再注册自定义消息
+dds message unregister-all
+
+# 每次注册或注销消息后，都需要更新话题工具才会生效，编译需要一段时间，请耐心等待
+dds topic update-tools
+```
+
+### 3.5.2. 消息调试工具使用
+
+#### 3.5.2.1. 基础功能
+
+```shell
+# 查看所有正在发布的话题
+dds topic list
+
+# 查看某个话题类型
+dds topic type <topic_name>
+
+# 持续输出某个话题消息数据
+dds topic echo <topic_name>
+
+# 查找某个消息类型的所有正在发布的话题
+dds topic find <topic_type>
+
+# 查看某个话题发布频率等信息
+dds topic hz <topic_name>
+
+# 查看所有支持的DDS消息类型
+dds topic list-supported-type
+```
+
+#### 3.5.2.2. ROS与DDS消息互相转发
+
+**注：以下命令需要在第一步编译工具时默认启动DDS/ROS消息互相转发的功能**
+
+```shell
+# 将指定ROS话题发布到DDS中
+dds-ros from_ros <ros_topic1> <ros_topic2> ...
+
+# 将所有正在发布且格式被DDS支持的ROS话题都发布到DDS中
+dds-ros from_ros all
+
+# 将指定DDS话题发布到ROS中
+dds-ros to_ros <dds_topic1> <dds_topic2> ...
+
+# 将所有正在发布且格式被DDS支持的DDS话题都发布到ROS中
+dds-ros to_ros all
+```
+
+## 3.6. 导出程序(**暂未验证效果，谨慎使用**)
 
 如果想将程序打包，方便在其他同架构电脑上运行，想先把所有需要的文件打包到文件夹`/home/dds/export`中，且在`/home/dds/dds_workspace/configs`中的配置文件需要一并导出，则在工作空间执行以下命令即可导出`install`文件夹下所有文件并打包所有相关库文件
 
@@ -287,3 +357,4 @@ dds export /home/dds/export --add /home/dds/dds_workspace/configs
 source ./setup.bash
 dds_launch launch/dds_workspace_test1.yaml
 ```
+
